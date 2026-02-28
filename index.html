@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kotak Hadiah Vitamin C</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Dancing+Script:wght@700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle, #0f172a 0%, #020617 100%);
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Container untuk perspektif 3D */
+        .box-container {
+            perspective: 1000px;
+        }
+
+        .box {
+            position: relative;
+            width: 100px; 
+            height: 100px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        /* Rupa paras setiap sisi kotak */
+        .box-face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #dc2626; 
+            border: 2px solid #991b1b;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Reben Kuning Emas */
+        .ribbon-v {
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background: #facc15;
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        .ribbon-h {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: #facc15;
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .front  { transform: translateZ(50px); }
+        .back   { transform: rotateY(180deg) translateZ(50px); }
+        .left   { transform: rotateY(-90deg) translateZ(50px); }
+        .right  { transform: rotateY(90deg) translateZ(50px); }
+        .bottom { transform: rotateX(-90deg) translateZ(50px); background: #7f1d1d; }
+        
+        /* Penutup Kotak (Top) */
+        .top { 
+            position: absolute;
+            width: 110px; 
+            height: 110px;
+            top: -5px;
+            left: -5px;
+            background: #ef4444;
+            transform: rotateX(90deg) translateZ(50px); 
+            transform-origin: top;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            border: 2px solid #b91c1c;
+        }
+
+        /* Ikatan Reben di atas */
+        .bow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            z-index: 20;
+        }
+        .bow-left, .bow-right {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #facc15;
+            border-radius: 50% 50% 0 50%;
+            border: 2px solid #ca8a04;
+        }
+        .bow-left { transform: rotate(-45deg) translateX(-10px); }
+        .bow-right { transform: rotate(135deg) translateX(-10px); }
+
+        /* Animasi Terbuka */
+        .box.open .top {
+            transform: rotateX(90deg) rotateX(-130deg) translateZ(50px);
+        }
+
+        .vitamin-c {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 4rem;
+            color: #fbbf24;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(0,0,0,0.5);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: -1;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .box.open .vitamin-c {
+            transform: translate(-50%, -300%) scale(1.5);
+            opacity: 1;
+        }
+
+        /* Gaya Bar Kemajuan Kelantangan */
+        .progress-container {
+            width: 350px;
+            height: 14px;
+            background: #1e293b;
+            border-radius: 20px;
+            border: 2px solid #334155;
+            overflow: hidden;
+        }
+
+        #volume-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #facc15, #ef4444);
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px) rotate(0deg); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
+        
+        #reset-btn {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        #reset-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6">
+
+    <div class="h-12 mb-12"></div>
+
+    <div class="box-container mb-24">
+        <div class="box" id="magic-box">
+            <!-- Sisi Kotak -->
+            <div class="box-face front"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+            <div class="box-face back"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+            <div class="box-face left"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+            <div class="box-face right"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+            <div class="box-face bottom"></div>
+            
+            <!-- Penutup -->
+            <div class="top" id="lid">
+                <div class="ribbon-v" style="left:50%; transform:translateX(-50%);"></div>
+                <div class="ribbon-h" style="top:50%; transform:translateY(-50%);"></div>
+                <div class="bow">
+                    <div class="bow-left"></div>
+                    <div class="bow-right"></div>
+                </div>
+            </div>
+
+            <!-- Kandungan yang akan terapung keluar -->
+            <div class="vitamin-c" id="vitamin-text">🍊 Vitamin C</div>
+        </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-6">
+        <div class="text-center mb-2">
+            <p class="text-slate-400 font-bold leading-tight" style="font-size: 30px;">
+                Jerit <span class="text-yellow-400">"BUKA"</span>
+            </p>
+            <p class="text-slate-500 text-lg italic mt-1">untuk melihat isi di dalam!</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-xs uppercase tracking-widest text-slate-500">Volume</span>
+            <div class="progress-container">
+                <div id="volume-fill"></div>
+            </div>
+        </div>
+        
+        <button id="start-btn" class="bg-gradient-to-r from-yellow-500 to-red-600 hover:from-yellow-400 hover:to-red-500 text-white px-10 py-4 rounded-full font-bold text-xl transition-all shadow-xl hover:shadow-red-500/20 active:scale-95">
+            🎁 Mula Permainan
+        </button>
+
+        <button id="reset-btn" onclick="location.reload()" class="bg-slate-800 text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-700 transition-all border border-slate-600">
+            Main Lagi
+        </button>
+
+        <p id="status-msg" class="text-sm text-slate-500 italic">Klik butang untuk mengaktifkan sensor bunyi.</p>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const statusMsg = document.getElementById('status-msg');
+        const volumeFill = document.getElementById('volume-fill');
+        const magicBox = document.getElementById('magic-box');
+
+        let audioContext;
+        let analyser;
+        let microphone;
+        let recognition;
+        let isOpening = false;
+
+        async function initGame() {
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    statusMsg.innerText = "Pelayar anda tidak menyokong pengecaman suara.";
+                    return;
+                }
+
+                recognition = new SpeechRecognition();
+                recognition.lang = 'ms-MY';
+                recognition.continuous = true;
+                recognition.interimResults = true;
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+
+                startBtn.style.display = 'none';
+                statusMsg.innerText = "Sensor Aktif! Jerit 'BUKA' sekuat hati!";
+                statusMsg.classList.add('text-yellow-500');
+
+                recognition.start();
+                monitorVolume();
+
+            } catch (err) {
+                statusMsg.innerText = "Ralat: Sila benarkan akses mikrofon.";
+                console.error(err);
+            }
+        }
+
+        function monitorVolume() {
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function update() {
+                if (isOpening) return;
+
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    sum += dataArray[i];
+                }
+                let average = sum / bufferLength;
+                
+                let volumePercent = Math.min(100, (average / 70) * 100);
+                volumeFill.style.width = volumePercent + '%';
+
+                if (volumePercent > 80) {
+                    magicBox.classList.add('shake');
+                } else {
+                    magicBox.classList.remove('shake');
+                }
+
+                if (volumePercent >= 99) {
+                    openBox();
+                }
+
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        function openBox() {
+            if(isOpening) return;
+            isOpening = true;
+            
+            magicBox.classList.remove('shake');
+            magicBox.classList.add('open');
+            statusMsg.innerText = "HADIAH TERBUKA!";
+            
+            if(recognition) recognition.stop();
+            
+            // Tunjukkan butang reset selepas kotak dibuka
+            setTimeout(() => {
+                resetBtn.classList.add('visible');
+            }, 1500);
+        }
+
+        startBtn.addEventListener('click', initGame);
+    </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
